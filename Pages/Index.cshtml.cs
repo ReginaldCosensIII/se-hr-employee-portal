@@ -23,7 +23,7 @@ public class IndexModel : PageModel
     public List<string> ExistingEmployeeNames { get; set; } = new();
 
     public SelectList Agencies { get; set; } = default!;
-    public SelectList Certifications { get; set; } = default!;
+    public List<CertificationDto> AllCertifications { get; set; } = new();
 
     public async Task OnGetAsync()
     {
@@ -47,9 +47,6 @@ public class IndexModel : PageModel
             employee = new Employee
             {
                 DisplayName = Input.EmployeeName,
-                EmployeeIdNumber = Input.EmployeeIdNumber,
-                Role = Input.Role,
-                Department = Input.Department,
                 IsActive = true
             };
             _context.Employees.Add(employee);
@@ -62,9 +59,7 @@ public class IndexModel : PageModel
             ManagerName = Input.ManagerName,
             RequestType = Input.RequestType,
             AgencyId = Input.AgencyId,
-            CustomAgencyName = Input.CustomAgencyName,
             CertificationId = Input.CertificationId,
-            CustomCertificationName = Input.CustomCertificationName,
             Status = RequestStatus.Pending,
             RequestDate = DateTime.UtcNow
         };
@@ -84,42 +79,39 @@ public class IndexModel : PageModel
             .ToListAsync();
 
         Agencies = new SelectList(await _context.Agencies.Where(a => a.IsActive).ToListAsync(), "Id", "Abbreviation");
-        Certifications = new SelectList(await _context.Certifications.Where(c => c.IsActive).ToListAsync(), "Id", "Name");
+        AllCertifications = await _context.Certifications
+            .Where(c => c.IsActive && c.AgencyId > 0)
+            .Select(c => new CertificationDto { Id = c.Id, Name = c.Name, AgencyId = c.AgencyId })
+            .ToListAsync();
     }
 
     public class CertificationRequestInput
     {
         [Required(ErrorMessage = "Employee Name is required")]
-        [Display(Name = "Your Name")]
+        [Display(Name = "Employee Name")]
         public string EmployeeName { get; set; } = string.Empty;
 
-        [Display(Name = "Employee ID")]
-        public string? EmployeeIdNumber { get; set; }
-
-        [Display(Name = "Role (Optional)")]
-        public string? Role { get; set; }
-
-        [Display(Name = "Department (Optional)")]
-        public string? Department { get; set; }
-
-        [Required(ErrorMessage = "Manager Name is required")]
-        [Display(Name = "Manager's Name")]
+        [Required(ErrorMessage = "Manager is required")]
+        [Display(Name = "Manager")]
         public string ManagerName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Request Type is required")]
         [Display(Name = "Request Type")]
         public RequestType RequestType { get; set; }
 
+        [Required(ErrorMessage = "Agency is required")]
         [Display(Name = "Agency")]
-        public int? AgencyId { get; set; }
+        public int AgencyId { get; set; }
 
-        [Display(Name = "Custom Agency (if not listed)")]
-        public string? CustomAgencyName { get; set; }
-
+        [Required(ErrorMessage = "Certification is required")]
         [Display(Name = "Certification")]
-        public int? CertificationId { get; set; }
+        public int CertificationId { get; set; }
+    }
 
-        [Display(Name = "Custom Certification (if not listed)")]
-        public string? CustomCertificationName { get; set; }
+    public class CertificationDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int AgencyId { get; set; }
     }
 }

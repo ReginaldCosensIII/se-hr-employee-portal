@@ -7,47 +7,31 @@
 <div class="row justify-content-center">
     <div class="col-12" style="max-width: 800px; margin: 0 auto;">
         <div class="card shadow-sm border-0 mb-5">
-            <div class="card-header bg-primary text-white border-0 py-4 text-center">
-                <img src="~/img/SE_Logo_White.png" alt="Specialized Engineering Logo" style="height: 60px; object-fit: contain; margin-bottom: 15px;" />
-                <h4 class="mb-0 card-title">
-                    <i data-lucide="file-text" class="me-2 align-middle"></i> Submit Certification Request
-                </h4>
+            <div class="card-header border-0 p-0 text-center d-flex align-items-stretch" style="background-color: #a19482;">
+                <!-- Logo section with black background -->
+                <div class="bg-black py-3 px-4 d-flex align-items-center justify-content-center" style="border-top-left-radius: inherit;">
+                    <img src="~/img/SE_Logo_White.png" alt="Specialized Engineering Logo" style="height: 50px; object-fit: contain;" />
+                </div>
+                <!-- Title section -->
+                <div class="flex-grow-1 text-white py-3 px-3 d-flex align-items-center justify-content-center">
+                    <h4 class="mb-0 card-title">
+                        <i data-lucide="file-text" class="me-2 align-middle text-white"></i> Submit Certification Request
+                    </h4>
+                </div>
             </div>
             <div class="card-body p-4">
-                <form method="post" id="submissionForm">
+                <form method="post" id="submissionForm" onsubmit="return confirm('Please double check all of your entries and verify they are correct, specifically the employee name. Do you want to submit?');">
                     <!-- Employee Warning Alert (Hidden by default) -->
                     <div id="employeeWarning" class="alert alert-warning d-none" role="alert">
                         <i data-lucide="alert-triangle" class="me-2"></i> 
                         ⚠️ Name not recognized. If you are a new employee, please proceed. Otherwise, contact HR to verify your record.
                     </div>
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
+                    <div class="row g-4">
+                        <div class="col-md-12">
                             <label asp-for="Input.EmployeeName" class="form-label fw-bold"></label>
-                            <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" list="employeeNames" required autocomplete="off" />
-                            <datalist id="employeeNames">
-                                @foreach (var name in Model.ExistingEmployeeNames)
-                                {
-                                    <option value="@name" />
-                                }
-                            </datalist>
+                            <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" required />
                             <span asp-validation-for="Input.EmployeeName" class="text-danger small"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Input.EmployeeIdNumber" class="form-label fw-bold"></label>
-                            <input asp-for="Input.EmployeeIdNumber" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Input.Role" class="form-label fw-bold"></label>
-                            <input asp-for="Input.Role" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Input.Department" class="form-label fw-bold"></label>
-                            <input asp-for="Input.Department" class="form-control" />
-                        </div>
-
-                        <div class="col-12">
-                            <hr class="my-4" />
                         </div>
 
                         <div class="col-md-12">
@@ -56,40 +40,57 @@
                             <span asp-validation-for="Input.ManagerName" class="text-danger small"></span>
                         </div>
 
-                        <div class="col-md-12">
-                            <label asp-for="Input.RequestType" class="form-label fw-bold"></label>
-                            <select asp-for="Input.RequestType" class="form-select" asp-items="Html.GetEnumSelectList<SeHrCertificationPortal.Models.RequestType>()" required>
-                                <option value="">-- Select Type --</option>
-                            </select>
-                            <span asp-validation-for="Input.RequestType" class="text-danger small"></span>
+                        <div class="col-12">
+                            <hr class="my-2" />
                         </div>
 
                         <div class="col-md-6">
                             <label asp-for="Input.AgencyId" class="form-label fw-bold"></label>
-                            <select asp-for="Input.AgencyId" class="form-select" asp-items="Model.Agencies">
+                            <select asp-for="Input.AgencyId" class="form-select" id="agencySelect" asp-items="Model.Agencies" required>
                                 <option value="">-- Select Agency --</option>
                             </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Input.CustomAgencyName" class="form-label fw-bold"></label>
-                            <input asp-for="Input.CustomAgencyName" class="form-control" placeholder="If not listed..." />
+                            <span asp-validation-for="Input.AgencyId" class="text-danger small"></span>
                         </div>
 
                         <div class="col-md-6">
                             <label asp-for="Input.CertificationId" class="form-label fw-bold"></label>
-                            <select asp-for="Input.CertificationId" class="form-select" asp-items="Model.Certifications">
-                                <option value="">-- Select Certification --</option>
+                            <select asp-for="Input.CertificationId" class="form-select" id="certificationSelect" required disabled>
+                                <option value="">-- Select Agency First --</option>
                             </select>
+                            <span asp-validation-for="Input.CertificationId" class="text-danger small"></span>
                         </div>
-                        <div class="col-md-6">
-                            <label asp-for="Input.CustomCertificationName" class="form-label fw-bold"></label>
-                            <input asp-for="Input.CustomCertificationName" class="form-control" placeholder="If not listed..." />
+
+                        <div class="col-12 mt-2">
+                            <small class="text-muted fst-italic">
+                                <i data-lucide="info" class="me-1" style="width: 14px; height: 14px;"></i> 
+                                If the needed Agency or Certification is not on the list, please speak to an HR Admin to add the necessary Agency or Certification via the Admin Portal.
+                            </small>
+                        </div>
+
+                        <div class="col-12">
+                            <hr class="my-2" />
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Input.RequestType" class="form-label fw-bold d-block mb-3"></label>
+                            <div class="d-flex flex-wrap gap-4">
+                                @foreach (var type in Html.GetEnumSelectList<SeHrCertificationPortal.Models.RequestType>())
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" asp-for="Input.RequestType" value="@type.Value" id="rtype_@type.Value" required>
+                                        <label class="form-check-label" for="rtype_@type.Value">
+                                            @type.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="Input.RequestType" class="text-danger small"></span>
                         </div>
                     </div>
 
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            <i data-lucide="send" class="me-2"></i> Submit Request
+                    <div class="d-grid mt-5">
+                        <button type="submit" class="btn btn-brand btn-lg text-white font-weight-bold shadow-sm">
+                            <i data-lucide="send" class="me-2 text-white"></i> Submit Request
                         </button>
                     </div>
                 </form>
@@ -102,6 +103,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Unused names logic - still warning on blur but no datalist
             const existingNames = @Json.Serialize(Model.ExistingEmployeeNames);
             const nameInput = document.getElementById('employeeNameInput');
             const warningAlert = document.getElementById('employeeWarning');
@@ -119,6 +121,53 @@
                     warningAlert.classList.add('d-none');
                 }
             });
+
+            // Cascading Dropdown Logic
+            const allCertifications = @Json.Serialize(Model.AllCertifications);
+            const agencySelect = document.getElementById('agencySelect');
+            const certificationSelect = document.getElementById('certificationSelect');
+
+            agencySelect.addEventListener('change', function () {
+                const agencyId = this.value;
+                certificationSelect.innerHTML = '<option value="">-- Select Certification --</option>';
+                
+                if (agencyId) {
+                    certificationSelect.disabled = false;
+                    const filtered = allCertifications.filter(c => c.agencyId == agencyId || c.AgencyId == agencyId);
+                    
+                    filtered.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id || c.Id;
+                        opt.textContent = c.name || c.Name;
+                        certificationSelect.appendChild(opt);
+                    });
+                } else {
+                    certificationSelect.disabled = true;
+                    certificationSelect.innerHTML = '<option value="">-- Select Agency First --</option>';
+                }
+            });
+            
+            // Re-trigger if agency was pre-selected (e.g. from validation error postback)
+            if (agencySelect.value) {
+                // Manually populate existing certification selection without losing it
+                const currentCertValue = '@Model.Input.CertificationId';
+                const agencyId = agencySelect.value;
+                certificationSelect.innerHTML = '<option value="">-- Select Certification --</option>';
+                certificationSelect.disabled = false;
+                
+                const filtered = allCertifications.filter(c => c.agencyId == agencyId || c.AgencyId == agencyId);
+                
+                filtered.forEach(c => {
+                    const opt = document.createElement('option');
+                    const cid = c.id || c.Id;
+                    opt.value = cid;
+                    opt.textContent = c.name || c.Name;
+                    if (cid == currentCertValue) {
+                        opt.selected = true;
+                    }
+                    certificationSelect.appendChild(opt);
+                });
+            }
         });
     </script>
 }
