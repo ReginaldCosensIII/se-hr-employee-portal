@@ -1,0 +1,194 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Submit Request";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12" style="max-width: 800px; margin: 0 auto;">
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-header border-0 p-3 text-center" style="background-color: #a19482;">
+                <!-- Title section -->
+                <h4 class="mb-0 card-title text-white">
+                    <i data-lucide="file-text" class="me-2 align-middle text-white"></i> Submit Certification Request
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" id="submissionForm" autocomplete="off">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label asp-for="Input.EmployeeName" class="form-label fw-bold"></label>
+                            <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" autocomplete="off" required />
+                            <span asp-validation-for="Input.EmployeeName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Request Date</label>
+                            <input type="date" class="form-control bg-light" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Input.ManagerName" class="form-label fw-bold"></label>
+                            <input asp-for="Input.ManagerName" class="form-control" autocomplete="off" required />
+                            <span asp-validation-for="Input.ManagerName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <hr class="my-2" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Input.AgencyId" class="form-label fw-bold"></label>
+                            <select asp-for="Input.AgencyId" class="form-select" id="agencySelect" asp-items="Model.Agencies" required>
+                                <option value="">-- Select Agency --</option>
+                            </select>
+                            <span asp-validation-for="Input.AgencyId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Input.CertificationId" class="form-label fw-bold"></label>
+                            <select asp-for="Input.CertificationId" class="form-select" id="certificationSelect" required disabled>
+                                <option value="">-- Select Agency First --</option>
+                            </select>
+                            <span asp-validation-for="Input.CertificationId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <small class="text-muted fst-italic">
+                                <i data-lucide="info" class="me-1" style="width: 14px; height: 14px;"></i> 
+                                If the needed Agency or Certification is not on the list, please speak to an HR Admin to add the necessary Agency or Certification via the Admin Portal.
+                            </small>
+                        </div>
+
+                        <div class="col-12">
+                            <hr class="my-2" />
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Input.RequestType" class="form-label fw-bold d-block mb-3"></label>
+                            <div class="d-flex flex-wrap gap-4">
+                                @foreach (var type in Html.GetEnumSelectList<SeHrCertificationPortal.Models.RequestType>().Where(t => t.Text != "Other"))
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" asp-for="Input.RequestType" value="@type.Value" id="rtype_@type.Value" required>
+                                        <label class="form-check-label" for="rtype_@type.Value">
+                                            @type.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="Input.RequestType" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-5">
+                        <button type="button" id="triggerSubmitBtn" class="btn btn-brand btn-lg text-white font-weight-bold shadow-sm">
+                            <i data-lucide="send" class="me-2 text-white"></i> Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Verification Modal -->
+<div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header text-white" style="background-color: #a19482;">
+                <h5 class="modal-title" id="verificationModalLabel">
+                    <i data-lucide="file-check" class="me-2 text-white align-middle"></i> Verify Your Request
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <h5 class="fw-bold mb-3">Please Double Check Your Entries</h5>
+                <p class="text-muted mb-0">Ensure all the information entered, <strong class="text-dark">specifically your employee name</strong>, is entirely accurate before continuing.</p>
+            </div>
+            <div class="modal-footer bg-light border-0 justify-content-center py-3">
+                <button type="button" class="btn btn-outline-brand px-4 font-weight-bold" data-bs-dismiss="modal">Go Back & Edit</button>
+                <button type="button" id="confirmSubmitBtn" class="btn btn-brand px-4 text-white font-weight-bold">Yes, I Verify It Is Correct</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Cascading Dropdown Logic
+            const allCertifications = @Json.Serialize(Model.AllCertifications);
+            const agencySelect = document.getElementById('agencySelect');
+            const certificationSelect = document.getElementById('certificationSelect');
+
+            agencySelect.addEventListener('change', function () {
+                const agencyId = this.value;
+                certificationSelect.innerHTML = '<option value="">-- Select Certification --</option>';
+                
+                if (agencyId) {
+                    certificationSelect.disabled = false;
+                    const filtered = allCertifications.filter(c => c.agencyId == agencyId || c.AgencyId == agencyId);
+                    
+                    filtered.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id || c.Id;
+                        opt.textContent = c.name || c.Name;
+                        certificationSelect.appendChild(opt);
+                    });
+                } else {
+                    certificationSelect.disabled = true;
+                    certificationSelect.innerHTML = '<option value="">-- Select Agency First --</option>';
+                }
+            });
+            
+            // Re-trigger if agency was pre-selected (e.g. from validation error postback)
+            if (agencySelect.value) {
+                // Manually populate existing certification selection without losing it
+                const currentCertValue = '@Model.Input.CertificationId';
+                const agencyId = agencySelect.value;
+                certificationSelect.innerHTML = '<option value="">-- Select Certification --</option>';
+                certificationSelect.disabled = false;
+                
+                const filtered = allCertifications.filter(c => c.agencyId == agencyId || c.AgencyId == agencyId);
+                
+                filtered.forEach(c => {
+                    const opt = document.createElement('option');
+                    const cid = c.id || c.Id;
+                    opt.value = cid;
+                    opt.textContent = c.name || c.Name;
+                    if (cid == currentCertValue) {
+                        opt.selected = true;
+                    }
+                    certificationSelect.appendChild(opt);
+                });
+            }
+
+            // Verification Modal Logic
+            const form = document.getElementById('submissionForm');
+            const triggerBtn = document.getElementById('triggerSubmitBtn');
+            const confirmBtn = document.getElementById('confirmSubmitBtn');
+            const verificationModal = new bootstrap.Modal(document.getElementById('verificationModal'));
+
+            triggerBtn.addEventListener('click', function () {
+                if (form.reportValidity()) {
+                    verificationModal.show();
+                }
+            });
+
+            confirmBtn.addEventListener('click', function () {
+                // Prevent multiple clicks
+                this.classList.add('disabled');
+                this.disabled = true;
+                
+                // Add loading spinner UI
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing...';
+                
+                // Submit the form
+                form.submit();
+            });
+        });
+    </script>
+}

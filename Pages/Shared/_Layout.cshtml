@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HR Employee Portal</title>
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="~/lib/fontsource/source-sans-3.css" />
+    
+    <!-- Plugins -->
+    <link rel="stylesheet" href="~/lib/overlayscrollbars/styles/overlayscrollbars.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/bootstrap-icons.min.css" />
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="~/css/site.css" />
+    
+    <style>
+        /* Override sidebar margins and grid for standalone form */
+        body { display: block !important; }
+        .app-header, .app-main, .app-footer { margin-left: 0 !important; }
+    </style>
+</head>
+<body class="bg-body-tertiary">
+    <div id="main-content-wrapper">
+        <!-- Header -->
+        <nav class="app-header navbar navbar-expand bg-body shadow-sm p-0">
+            <div class="container-fluid px-0">
+                <ul class="navbar-nav align-items-stretch w-100 mb-0 position-relative" style="height: 60px;">
+                    <li class="nav-item d-flex position-absolute start-0 h-100 z-index-1">
+                        <div class="bg-black px-4 d-flex align-items-center h-100">
+                            <img src="~/img/branding-assets/Specialized-Engineering-Logo-white.webp" alt="Specialized Engineering Logo" style="height: 40px; object-fit: contain;" />
+                        </div>
+                    </li>
+                    <li class="nav-item d-flex align-items-center justify-content-center w-100 h-100">
+                        <h4 class="mb-0 fw-bold text-dark text-center">Employee Certification Request</h4>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Application Content -->
+        <main class="app-main flex-grow-1 p-4">
+            <div class="container-fluid">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3" role="alert">
+                        <i data-lucide="alert-octagon" class="me-2"></i> <strong>System Error:</strong> @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm mt-3" role="alert">
+                        <i data-lucide="check-circle" class="me-2"></i> @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @RenderBody()
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer py-3 bg-white border-top text-center text-sm text-muted">
+            <strong>Copyright &copy; @DateTime.Now.Year Specialized Engineering.</strong> All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/overlayscrollbars/js/overlayscrollbars.browser.es6.min.js"></script>
+    <script src="~/lib/popper/popper.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/lucide.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Lucide Icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
