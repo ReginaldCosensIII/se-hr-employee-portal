@@ -15,12 +15,6 @@
             </div>
             <div class="card-body p-4">
                 <form method="post" id="submissionForm" onsubmit="return confirm('Please double check all of your entries and verify they are correct, specifically the employee name. Do you want to submit?');">
-                    <!-- Employee Warning Alert (Hidden by default) -->
-                    <div id="employeeWarning" class="alert alert-warning d-none" role="alert">
-                        <i data-lucide="alert-triangle" class="me-2"></i> 
-                        ⚠️ Name not recognized. If you are a new employee, please proceed. Otherwise, contact HR to verify your record.
-                    </div>
-
                     <div class="row g-4">
                         <div class="col-md-6">
                             <label asp-for="Input.EmployeeName" class="form-label fw-bold"></label>
@@ -102,25 +96,6 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Unused names logic - still warning on blur but no datalist
-            const existingNames = @Json.Serialize(Model.ExistingEmployeeNames);
-            const nameInput = document.getElementById('employeeNameInput');
-            const warningAlert = document.getElementById('employeeWarning');
-
-            nameInput.addEventListener('blur', function () {
-                const enteredName = this.value.trim().toLowerCase();
-                if (enteredName.length > 0) {
-                    const isExisting = existingNames.some(name => name.toLowerCase() === enteredName);
-                    if (!isExisting) {
-                        warningAlert.classList.remove('d-none');
-                    } else {
-                        warningAlert.classList.add('d-none');
-                    }
-                } else {
-                    warningAlert.classList.add('d-none');
-                }
-            });
-
             // Cascading Dropdown Logic
             const allCertifications = @Json.Serialize(Model.AllCertifications);
             const agencySelect = document.getElementById('agencySelect');

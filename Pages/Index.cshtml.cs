@@ -20,8 +20,6 @@ public class IndexModel : PageModel
     [BindProperty]
     public CertificationRequestInput Input { get; set; } = new();
 
-    public List<string> ExistingEmployeeNames { get; set; } = new();
-
     public SelectList Agencies { get; set; } = default!;
     public List<CertificationDto> AllCertifications { get; set; } = new();
 
@@ -73,11 +71,6 @@ public class IndexModel : PageModel
 
     private async Task LoadDataAsync()
     {
-        ExistingEmployeeNames = await _context.Employees
-            .Where(e => e.IsActive)
-            .Select(e => e.DisplayName)
-            .ToListAsync();
-
         Agencies = new SelectList(await _context.Agencies.Where(a => a.IsActive).ToListAsync(), "Id", "Abbreviation");
         AllCertifications = await _context.Certifications
             .Where(c => c.IsActive && c.AgencyId > 0)
