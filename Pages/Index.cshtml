@@ -1,0 +1,117 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Submit Request";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white border-0 py-3">
+                <h4 class="mb-0 card-title d-flex align-items-center">
+                    <i data-lucide="file-text" class="me-2"></i> Submit Certification Request
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" id="submissionForm">
+                    <!-- Employee Warning Alert (Hidden by default) -->
+                    <div id="employeeWarning" class="alert alert-warning d-none" role="alert">
+                        <i data-lucide="alert-triangle" class="me-2"></i> 
+                        ⚠️ Name not recognized. If you are a new employee, please proceed. Otherwise, contact HR to verify your record.
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Input.EmployeeName" class="form-label fw-bold"></label>
+                            <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" required />
+                            <span asp-validation-for="Input.EmployeeName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.EmployeeIdNumber" class="form-label fw-bold"></label>
+                            <input asp-for="Input.EmployeeIdNumber" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.Role" class="form-label fw-bold"></label>
+                            <input asp-for="Input.Role" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.Department" class="form-label fw-bold"></label>
+                            <input asp-for="Input.Department" class="form-control" />
+                        </div>
+
+                        <div class="col-12">
+                            <hr class="my-4" />
+                        </div>
+
+                        <div class="col-md-12">
+                            <label asp-for="Input.ManagerName" class="form-label fw-bold"></label>
+                            <input asp-for="Input.ManagerName" class="form-control" required />
+                            <span asp-validation-for="Input.ManagerName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label asp-for="Input.RequestType" class="form-label fw-bold"></label>
+                            <select asp-for="Input.RequestType" class="form-select" asp-items="Html.GetEnumSelectList<SeHrCertificationPortal.Models.RequestType>()" required>
+                                <option value="">-- Select Type --</option>
+                            </select>
+                            <span asp-validation-for="Input.RequestType" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Input.AgencyId" class="form-label fw-bold"></label>
+                            <select asp-for="Input.AgencyId" class="form-select" asp-items="Model.Agencies">
+                                <option value="">-- Select Agency --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.CustomAgencyName" class="form-label fw-bold"></label>
+                            <input asp-for="Input.CustomAgencyName" class="form-control" placeholder="If not listed..." />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Input.CertificationId" class="form-label fw-bold"></label>
+                            <select asp-for="Input.CertificationId" class="form-select" asp-items="Model.Certifications">
+                                <option value="">-- Select Certification --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.CustomCertificationName" class="form-label fw-bold"></label>
+                            <input asp-for="Input.CustomCertificationName" class="form-control" placeholder="If not listed..." />
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i data-lucide="send" class="me-2"></i> Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const existingNames = @Json.Serialize(Model.ExistingEmployeeNames);
+            const nameInput = document.getElementById('employeeNameInput');
+            const warningAlert = document.getElementById('employeeWarning');
+
+            nameInput.addEventListener('blur', function () {
+                const enteredName = this.value.trim().toLowerCase();
+                if (enteredName.length > 0) {
+                    const isExisting = existingNames.some(name => name.toLowerCase() === enteredName);
+                    if (!isExisting) {
+                        warningAlert.classList.remove('d-none');
+                    } else {
+                        warningAlert.classList.add('d-none');
+                    }
+                } else {
+                    warningAlert.classList.add('d-none');
+                }
+            });
+        });
+    </script>
+}
