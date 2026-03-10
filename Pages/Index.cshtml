@@ -7,11 +7,17 @@
 <div class="row justify-content-center">
     <div class="col-12" style="max-width: 800px; margin: 0 auto;">
         <div class="card shadow-sm border-0 mb-5">
-            <div class="card-header border-0 p-3 text-center" style="background-color: #a19482;">
+            <div class="card-header border-0 p-0 d-flex align-items-stretch" style="background-color: #a19482; border-radius: calc(0.375rem - 1px) calc(0.375rem - 1px) 0 0; overflow: hidden;">
+                <!-- Logo section with black background -->
+                <div class="bg-black px-4 py-3 d-flex align-items-center justify-content-center">
+                    <img src="~/img/branding-assets/Specialized-Engineering-Logo-white.webp" alt="Specialized Engineering Logo" style="height: 45px; object-fit: contain;" />
+                </div>
                 <!-- Title section -->
-                <h4 class="mb-0 card-title text-white">
-                    <i data-lucide="file-text" class="me-2 align-middle text-white"></i> Submit Certification Request
-                </h4>
+                <div class="flex-grow-1 d-flex align-items-center justify-content-center pe-5">
+                    <h4 class="mb-0 card-title text-white">
+                        <i data-lucide="file-text" class="me-2 align-middle text-white"></i> Submit Certification Request
+                    </h4>
+                </div>
             </div>
             <div class="card-body p-4">
                 <form method="post" id="submissionForm">
