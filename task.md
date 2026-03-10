@@ -24,6 +24,6 @@
 - [x] Implement Auto-Registry Logic in `Index.cshtml.cs` (warn on missing name -> auto-add on submission).
 
 ## 5. Verification Phase
-- [/] Verify build succeeds.
-- [ ] Perform offline air-gap test (verify network requests).
-- [ ] Test submission flow and newly added automatic employee registry.
+- [x] Verify build succeeds.
+- [x] Perform offline air-gap test (verify network requests).
+- [x] Test submission flow and newly added automatic employee registry.

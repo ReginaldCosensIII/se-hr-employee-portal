@@ -165,3 +165,4 @@ C:\Users\Regin\source\repos\se-hr-employee-portal\obj\Debug\net10.0\compressed\4
 C:\Users\Regin\source\repos\se-hr-employee-portal\obj\Debug\net10.0\compressed\9yjypg2sd0-{0}-qg9hcnh6yl-qg9hcnh6yl.gz
 C:\Users\Regin\source\repos\se-hr-employee-portal\obj\Debug\net10.0\compressed\wnqoi16dzb-{0}-6hyj9av5kl-6hyj9av5kl.gz
 C:\Users\Regin\source\repos\se-hr-employee-portal\obj\Debug\net10.0\compressed\j67ti48tlj-{0}-9b4k305gys-9b4k305gys.gz
+C:\Users\Regin\source\repos\se-hr-employee-portal\obj\Debug\net10.0\SeHrEmployeePortal.sourcelink.json
