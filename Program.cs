@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SeHrCertificationPortal.Data;
+using SeHrEmployeePortal.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

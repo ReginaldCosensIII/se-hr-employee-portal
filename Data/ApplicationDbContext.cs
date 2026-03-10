@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SeHrCertificationPortal.Models;
 
-namespace SeHrCertificationPortal.Data
+namespace SeHrEmployeePortal.Data
 {
     public class ApplicationDbContext : DbContext
     {
