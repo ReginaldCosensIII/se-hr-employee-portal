@@ -7,17 +7,11 @@
 <div class="row justify-content-center">
     <div class="col-12" style="max-width: 800px; margin: 0 auto;">
         <div class="card shadow-sm border-0 mb-5">
-            <div class="card-header border-0 p-0 text-center d-flex align-items-stretch" style="background-color: #a19482;">
-                <!-- Logo section with black background -->
-                <div class="bg-black py-3 px-4 d-flex align-items-center justify-content-center" style="border-top-left-radius: inherit;">
-                    <img src="~/img/SE_Logo_White.png" alt="Specialized Engineering Logo" style="height: 50px; object-fit: contain;" />
-                </div>
+            <div class="card-header border-0 p-3 text-center" style="background-color: #a19482;">
                 <!-- Title section -->
-                <div class="flex-grow-1 text-white py-3 px-3 d-flex align-items-center justify-content-center">
-                    <h4 class="mb-0 card-title">
-                        <i data-lucide="file-text" class="me-2 align-middle text-white"></i> Submit Certification Request
-                    </h4>
-                </div>
+                <h4 class="mb-0 card-title text-white">
+                    <i data-lucide="file-text" class="me-2 align-middle text-white"></i> Submit Certification Request
+                </h4>
             </div>
             <div class="card-body p-4">
                 <form method="post" id="submissionForm" onsubmit="return confirm('Please double check all of your entries and verify they are correct, specifically the employee name. Do you want to submit?');">
@@ -28,7 +22,12 @@
                     </div>
 
                     <div class="row g-4">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Request Date</label>
+                            <input type="date" class="form-control bg-light" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                        </div>
+
+                        <div class="col-md-6">
                             <label asp-for="Input.EmployeeName" class="form-label fw-bold"></label>
                             <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" required />
                             <span asp-validation-for="Input.EmployeeName" class="text-danger small"></span>
