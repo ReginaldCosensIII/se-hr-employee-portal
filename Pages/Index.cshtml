@@ -14,7 +14,7 @@
                 </h4>
             </div>
             <div class="card-body p-4">
-                <form method="post" id="submissionForm" onsubmit="return confirm('Please double check all of your entries and verify they are correct, specifically the employee name. Do you want to submit?');">
+                <form method="post" id="submissionForm">
                     <div class="row g-4">
                         <div class="col-md-6">
                             <label asp-for="Input.EmployeeName" class="form-label fw-bold"></label>
@@ -82,11 +82,36 @@
                     </div>
 
                     <div class="d-grid mt-5">
-                        <button type="submit" class="btn btn-brand btn-lg text-white font-weight-bold shadow-sm">
+                        <button type="button" id="triggerSubmitBtn" class="btn btn-brand btn-lg text-white font-weight-bold shadow-sm">
                             <i data-lucide="send" class="me-2 text-white"></i> Submit Request
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Verification Modal -->
+<div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header text-white" style="background-color: #a19482;">
+                <h5 class="modal-title" id="verificationModalLabel">
+                    <i data-lucide="file-check" class="me-2 text-white align-middle"></i> Verify Your Request
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3 text-warning">
+                    <i data-lucide="alert-triangle" style="width: 48px; height: 48px;"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Please Double Check Your Entries</h5>
+                <p class="text-muted mb-0">Ensure all the information entered, <strong class="text-dark">specifically your employee name</strong>, is entirely accurate before continuing.</p>
+            </div>
+            <div class="modal-footer bg-light border-0 justify-content-center py-3">
+                <button type="button" class="btn btn-outline-secondary px-4 font-weight-bold" data-bs-dismiss="modal">Go Back & Edit</button>
+                <button type="button" id="confirmSubmitBtn" class="btn btn-brand px-4 text-white font-weight-bold">Yes, I Verify It Is Correct</button>
             </div>
         </div>
     </div>
@@ -142,6 +167,25 @@
                     certificationSelect.appendChild(opt);
                 });
             }
+
+            // Verification Modal Logic
+            const form = document.getElementById('submissionForm');
+            const triggerBtn = document.getElementById('triggerSubmitBtn');
+            const confirmBtn = document.getElementById('confirmSubmitBtn');
+            const verificationModal = new bootstrap.Modal(document.getElementById('verificationModal'));
+
+            triggerBtn.addEventListener('click', function () {
+                if (form.reportValidity()) {
+                    verificationModal.show();
+                }
+            });
+
+            confirmBtn.addEventListener('click', function () {
+                // Prevent multiple clicks
+                this.disabled = true;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Submitting...';
+                form.submit();
+            });
         });
     </script>
 }
