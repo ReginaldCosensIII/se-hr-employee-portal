@@ -14,11 +14,11 @@
                 </h4>
             </div>
             <div class="card-body p-4">
-                <form method="post" id="submissionForm">
+                <form method="post" id="submissionForm" autocomplete="off">
                     <div class="row g-4">
                         <div class="col-md-6">
                             <label asp-for="Input.EmployeeName" class="form-label fw-bold"></label>
-                            <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" required />
+                            <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" autocomplete="off" required />
                             <span asp-validation-for="Input.EmployeeName" class="text-danger small"></span>
                         </div>
 
@@ -29,7 +29,7 @@
 
                         <div class="col-md-6">
                             <label asp-for="Input.ManagerName" class="form-label fw-bold"></label>
-                            <input asp-for="Input.ManagerName" class="form-control" required />
+                            <input asp-for="Input.ManagerName" class="form-control" autocomplete="off" required />
                             <span asp-validation-for="Input.ManagerName" class="text-danger small"></span>
                         </div>
 
