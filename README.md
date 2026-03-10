@@ -19,13 +19,3 @@ By design, this separation limits the operational attack surface while still all
 - `PostgreSQL`
 - `Bootstrap 5.3.3`
 
----
-
-## Deployment Checklist (For Chris L.)
-
-- [ ] Pull the latest `main` branch code to the production server.
-- [ ] Create a dedicated App Pool in IIS for the employee portal application.
-- [ ] Bind the IIS Site specifically to **Port 8081**.
-- [ ] Verify the shared `DefaultConnection` PostgreSQL connection string in `appsettings.json` accurately points to the established Admin Portal database instance.
-- [ ] Provide write access privileges to the physical IIS runtime folder.
-- [ ] Start the application pool and verify the portal loads properly at `http://localhost:8081/`.
