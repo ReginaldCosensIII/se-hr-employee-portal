@@ -22,8 +22,8 @@ public class IndexModel : PageModel
 
     public List<string> ExistingEmployeeNames { get; set; } = new();
 
-    public SelectList Agencies { get; set; }
-    public SelectList Certifications { get; set; }
+    public SelectList Agencies { get; set; } = default!;
+    public SelectList Certifications { get; set; } = default!;
 
     public async Task OnGetAsync()
     {

@@ -5,11 +5,12 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white border-0 py-3">
-                <h4 class="mb-0 card-title d-flex align-items-center">
-                    <i data-lucide="file-text" class="me-2"></i> Submit Certification Request
+    <div class="col-12" style="max-width: 800px; margin: 0 auto;">
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-header bg-primary text-white border-0 py-4 text-center">
+                <img src="~/img/SE_Logo_White.png" alt="Specialized Engineering Logo" style="height: 60px; object-fit: contain; margin-bottom: 15px;" />
+                <h4 class="mb-0 card-title">
+                    <i data-lucide="file-text" class="me-2 align-middle"></i> Submit Certification Request
                 </h4>
             </div>
             <div class="card-body p-4">
@@ -23,7 +24,13 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label asp-for="Input.EmployeeName" class="form-label fw-bold"></label>
-                            <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" required />
+                            <input asp-for="Input.EmployeeName" class="form-control" id="employeeNameInput" list="employeeNames" required autocomplete="off" />
+                            <datalist id="employeeNames">
+                                @foreach (var name in Model.ExistingEmployeeNames)
+                                {
+                                    <option value="@name" />
+                                }
+                            </datalist>
                             <span asp-validation-for="Input.EmployeeName" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
