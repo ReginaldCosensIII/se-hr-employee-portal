@@ -3,6 +3,16 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# ============================================================
+# SECRETS - NEVER COMMIT - Connection strings, passwords, keys
+# ============================================================
+appsettings.Development.json
+appsettings.*.json
+.env
+.env.local
+.env.*.local
+secrets.json
+
 # dotenv files
 .env
 
