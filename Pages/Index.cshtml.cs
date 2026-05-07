@@ -55,7 +55,7 @@ public class IndexModel : PageModel
         {
             EmployeeId = employee.Id,
             ManagerName = Input.ManagerName,
-            RequestType = Input.RequestType,
+            RequestTypes = Input.RequestTypes,
             AgencyId = Input.AgencyId,
             CertificationId = Input.CertificationId,
             Status = RequestStatus.Pending,
@@ -89,8 +89,9 @@ public class IndexModel : PageModel
         public string ManagerName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Request Type is required")]
+        [MinLength(1, ErrorMessage = "Please select at least one Request Type.")]
         [Display(Name = "Request Type")]
-        public RequestType RequestType { get; set; }
+        public List<RequestType> RequestTypes { get; set; } = new List<RequestType>();
 
         [Required(ErrorMessage = "Agency is required")]
         [Display(Name = "Agency")]
