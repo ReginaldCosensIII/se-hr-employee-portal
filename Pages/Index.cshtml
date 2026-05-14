@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Submit Request";
@@ -65,19 +65,19 @@
                         </div>
 
                         <div class="col-12">
-                            <label asp-for="Input.RequestType" class="form-label fw-bold d-block mb-3"></label>
+                            <label asp-for="Input.RequestTypes" class="form-label fw-bold d-block mb-3"></label>
                             <div class="d-flex flex-wrap gap-4">
                                 @foreach (var type in Html.GetEnumSelectList<SeHrCertificationPortal.Models.RequestType>().Where(t => t.Text != "Other"))
                                 {
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" asp-for="Input.RequestType" value="@type.Value" id="rtype_@type.Value" required>
+                                        <input class="form-check-input" type="checkbox" name="Input.RequestTypes" value="@type.Value" id="rtype_@type.Value">
                                         <label class="form-check-label" for="rtype_@type.Value">
                                             @type.Text
                                         </label>
                                     </div>
                                 }
                             </div>
-                            <span asp-validation-for="Input.RequestType" class="text-danger small"></span>
+                            <span asp-validation-for="Input.RequestTypes" class="text-danger small"></span>
                         </div>
                     </div>
 
