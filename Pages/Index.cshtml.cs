@@ -3,18 +3,24 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SeHrEmployeePortal.Data;
+using SeHrEmployeePortal.Services;
 using SeHrCertificationPortal.Models;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 
 namespace SeHrEmployeePortal.Pages;
 
 public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+    private readonly IEmailService _emailService;
+    private readonly ILogger<IndexModel> _logger;
 
-    public IndexModel(ApplicationDbContext context)
+    public IndexModel(ApplicationDbContext context, IEmailService emailService, ILogger<IndexModel> logger)
     {
         _context = context;
+        _emailService = emailService;
+        _logger = logger;
     }
 
     [BindProperty]
@@ -64,6 +70,20 @@ public class IndexModel : PageModel
 
         _context.CertificationRequests.Add(request);
         await _context.SaveChangesAsync();
+
+        try
+        {
+            var certName = await _context.Certifications
+                .Where(c => c.Id == Input.CertificationId)
+                .Select(c => c.Name)
+                .FirstOrDefaultAsync() ?? "Unknown Certification";
+                
+            await _emailService.SendNewRequestNotificationAsync(Input.EmployeeName, certName, Input.ManagerName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send email notification for new certification request submission.");
+        }
 
         TempData["SuccessMessage"] = "Your certification request has been successfully submitted!";
         return RedirectToPage("./Index");
