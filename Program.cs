@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using SeHrEmployeePortal.Data;
+using SeHrEmployeePortal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
-// Note: Do NOT call builder.WebHost.UseUrls() — IIS manages URL bindings via ANCM (aspNetCore module).
+builder.Services.AddTransient<IEmailService, SmtpEmailService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
